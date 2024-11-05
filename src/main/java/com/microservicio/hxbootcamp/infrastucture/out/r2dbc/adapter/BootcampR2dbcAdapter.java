@@ -7,6 +7,7 @@ import com.microservicio.hxbootcamp.infrastucture.out.r2dbc.mapper.IBootcampEnti
 import com.microservicio.hxbootcamp.infrastucture.out.r2dbc.repository.BootcampRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @PersistenceAdapter
@@ -19,6 +20,12 @@ public class BootcampR2dbcAdapter implements IBootcampPersistencePort {
     @Override
     public Mono<BootcampModel> guardar(BootcampModel bootcampModel) {
         return bootcampRepository.save(bootcampEntityMapper.toEntityFromModel(bootcampModel))
+                .map(bootcampEntityMapper::toModelFronEntity);
+    }
+
+    @Override
+    public Flux<BootcampModel> obtenerTodos() {
+        return bootcampRepository.findAll()
                 .map(bootcampEntityMapper::toModelFronEntity);
     }
 }

@@ -1,6 +1,8 @@
 package com.microservicio.hxbootcamp.application.service.impl;
 
+import com.microservicio.hxbootcamp.application.dto.request.BootcampFilterRequestDto;
 import com.microservicio.hxbootcamp.application.dto.request.BootcampRequestDto;
+import com.microservicio.hxbootcamp.application.dto.response.BootcampPaginacionResponseDto;
 import com.microservicio.hxbootcamp.application.dto.response.BootcampResponseDto;
 import com.microservicio.hxbootcamp.application.mapper.IBootcampModelMapper;
 import com.microservicio.hxbootcamp.application.service.IBootcampService;
@@ -11,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
+
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,5 +39,45 @@ public class BootcampService implements IBootcampService {
                     bootcampResponseDto.setCantidadCapacidad(res.getCantidadCapacidad());
                     return bootcampResponseDto;
                 });
+    }
+
+    @Override
+    public Mono<BootcampPaginacionResponseDto<BootcampResponseDto>>
+        consultarBootcampTodosPaginado(Mono<BootcampFilterRequestDto> bootcampFilterRequestDTO) {
+        return bootcampFilterRequestDTO.flatMap(filter -> bootcampUseCasePort.obtenerTodos()
+            .switchIfEmpty(Mono.empty())
+            .map(bootcamp ->
+                    new BootcampResponseDto(bootcamp.getId(), bootcamp.getNombre(), bootcamp.getDescripcion(), bootcamp.getCantidadCapacidad()))
+            .sort((getComparator(filter)))
+            .collectList()
+            .flatMap(listaBootcamp -> {
+                // Calcular la paginación
+                int skip = filter.getNumeroPagina() * filter.getTamanoPorPagina();
+                List<BootcampResponseDto> paginaBootcamp = listaBootcamp.stream()
+                        .skip(skip)
+                        .limit(filter.getTamanoPorPagina())
+                        .toList();
+
+                return Mono.just(new BootcampPaginacionResponseDto<>(
+                        paginaBootcamp,
+                        filter.getNumeroPagina(),
+                        filter.getTamanoPorPagina(),
+                        paginaBootcamp.size()));
+            }));
+    }
+
+    private Comparator<BootcampResponseDto> getComparator(BootcampFilterRequestDto filter) {
+        if ("nombre".equalsIgnoreCase(filter.getColumnaOrdenamiento())) {
+            return filter.getDireccionOrdenamiento().equalsIgnoreCase("asc")
+                    ? Comparator.comparing(BootcampResponseDto::getNombre)
+                    : Comparator.comparing(BootcampResponseDto::getNombre).reversed();
+        } else if ("nrocapacidad".equalsIgnoreCase(filter.getColumnaOrdenamiento())) {
+            return filter.getDireccionOrdenamiento().equalsIgnoreCase("asc")
+                    ? Comparator.comparingInt(BootcampResponseDto::getCantidadCapacidad)
+                    : Comparator.comparingInt(BootcampResponseDto::getCantidadCapacidad).reversed();
+        }
+
+        // Comparator por defecto en caso de que el campo no coincida
+        return Comparator.comparing(BootcampResponseDto::getNombre);
     }
 }

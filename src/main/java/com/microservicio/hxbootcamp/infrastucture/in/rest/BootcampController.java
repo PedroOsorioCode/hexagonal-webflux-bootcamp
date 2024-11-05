@@ -1,7 +1,9 @@
 package com.microservicio.hxbootcamp.infrastucture.in.rest;
 
+import com.microservicio.hxbootcamp.application.dto.request.BootcampFilterRequestDto;
 import com.microservicio.hxbootcamp.application.dto.request.BootcampRequestDto;
 import com.microservicio.hxbootcamp.application.dto.request.CapacidadRequestDto;
+import com.microservicio.hxbootcamp.application.dto.response.BootcampPaginacionResponseDto;
 import com.microservicio.hxbootcamp.application.dto.response.BootcampResponseDto;
 import com.microservicio.hxbootcamp.application.dto.response.CapacidadResponseDto;
 import com.microservicio.hxbootcamp.application.service.IBootcampService;
@@ -39,5 +41,14 @@ public class BootcampController {
         return bootcampService.guardar(bootcampRequestDto)
                 .map(bootcamp -> ResponseEntity.ok(bootcamp))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/listar")
+    public Mono<ResponseEntity<BootcampPaginacionResponseDto<BootcampResponseDto>>> consultarTodos(
+            @RequestBody Mono<BootcampFilterRequestDto> capacidadFilterRequestDTO) {
+
+        return bootcampService.consultarBootcampTodosPaginado(capacidadFilterRequestDTO)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.noContent().build());
     }
 }
