@@ -2,10 +2,8 @@ package com.microservicio.hxbootcamp.infrastucture.in.rest;
 
 import com.microservicio.hxbootcamp.application.dto.request.BootcampFilterRequestDto;
 import com.microservicio.hxbootcamp.application.dto.request.BootcampRequestDto;
-import com.microservicio.hxbootcamp.application.dto.request.CapacidadRequestDto;
 import com.microservicio.hxbootcamp.application.dto.response.BootcampPaginacionResponseDto;
 import com.microservicio.hxbootcamp.application.dto.response.BootcampResponseDto;
-import com.microservicio.hxbootcamp.application.dto.response.CapacidadResponseDto;
 import com.microservicio.hxbootcamp.application.service.IBootcampService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/bootcamp")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class BootcampController {
     private final IBootcampService bootcampService;

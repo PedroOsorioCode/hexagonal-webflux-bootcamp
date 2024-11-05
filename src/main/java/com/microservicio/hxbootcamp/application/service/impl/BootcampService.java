@@ -62,7 +62,7 @@ public class BootcampService implements IBootcampService {
                         paginaBootcamp,
                         filter.getNumeroPagina(),
                         filter.getTamanoPorPagina(),
-                        paginaBootcamp.size()));
+                        listaBootcamp.size()));
             }));
     }
 
