@@ -1,4 +1,4 @@
-package com.microservicio.hxbootcamp.infrastucture.in.rest;
+package com.microservicio.hxbootcamp.infrastucture.input.rest;
 
 import com.microservicio.hxbootcamp.application.dto.request.BootcampFilterRequestDto;
 import com.microservicio.hxbootcamp.application.dto.request.BootcampRequestDto;
@@ -38,7 +38,7 @@ public class BootcampController {
     @PostMapping
     public Mono<ResponseEntity<BootcampResponseDto>> guardar(@RequestBody Mono<BootcampRequestDto> bootcampRequestDto) {
         return bootcampService.guardar(bootcampRequestDto)
-                .map(bootcamp -> ResponseEntity.ok(bootcamp))
+                .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 

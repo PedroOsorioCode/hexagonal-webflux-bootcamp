@@ -1,5 +1,6 @@
 package com.microservicio.hxbootcamp.application.service.impl;
 
+import com.microservicio.hxbootcamp.application.common.ConstantesAplicacion;
 import com.microservicio.hxbootcamp.application.dto.request.BootcampFilterRequestDto;
 import com.microservicio.hxbootcamp.application.dto.request.BootcampRequestDto;
 import com.microservicio.hxbootcamp.application.dto.response.BootcampPaginacionResponseDto;
@@ -33,7 +34,7 @@ public class BootcampService implements IBootcampService {
                 bootcampModel.setCantidadCapacidad(req.getCantidadCapacidad());
                 return Mono.just(bootcampModel);
             })
-            .flatMap(data -> bootcampUseCasePort.guardar(data))
+            .flatMap(bootcampUseCasePort::guardar)
                 .map(res -> {
                     BootcampResponseDto bootcampResponseDto = bootcampModelMapper.toResponseFromModel(res);
                     bootcampResponseDto.setCantidadCapacidad(res.getCantidadCapacidad());
@@ -67,12 +68,12 @@ public class BootcampService implements IBootcampService {
     }
 
     private Comparator<BootcampResponseDto> getComparator(BootcampFilterRequestDto filter) {
-        if ("nombre".equalsIgnoreCase(filter.getColumnaOrdenamiento())) {
-            return filter.getDireccionOrdenamiento().equalsIgnoreCase("asc")
+        if (ConstantesAplicacion.COLUMN_NOMBRE.equalsIgnoreCase(filter.getColumnaOrdenamiento())) {
+            return filter.getDireccionOrdenamiento().equalsIgnoreCase(ConstantesAplicacion.METODO_ORDENAMIENTO_ASC)
                     ? Comparator.comparing(BootcampResponseDto::getNombre)
                     : Comparator.comparing(BootcampResponseDto::getNombre).reversed();
-        } else if ("nrocapacidad".equalsIgnoreCase(filter.getColumnaOrdenamiento())) {
-            return filter.getDireccionOrdenamiento().equalsIgnoreCase("asc")
+        } else if (ConstantesAplicacion.COLUMN_CANTIDAD.equalsIgnoreCase(filter.getColumnaOrdenamiento())) {
+            return filter.getDireccionOrdenamiento().equalsIgnoreCase(ConstantesAplicacion.METODO_ORDENAMIENTO_ASC)
                     ? Comparator.comparingInt(BootcampResponseDto::getCantidadCapacidad)
                     : Comparator.comparingInt(BootcampResponseDto::getCantidadCapacidad).reversed();
         }

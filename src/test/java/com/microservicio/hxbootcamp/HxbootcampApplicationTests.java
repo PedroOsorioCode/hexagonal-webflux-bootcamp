@@ -8,6 +8,7 @@ class HxbootcampApplicationTests {
 
 	@Test
 	void contextLoads() {
+		//
 	}
 
 }
