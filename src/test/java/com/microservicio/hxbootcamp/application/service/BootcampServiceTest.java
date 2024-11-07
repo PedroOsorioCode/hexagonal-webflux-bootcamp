@@ -1,12 +1,10 @@
 package com.microservicio.hxbootcamp.application.service;
 
-import com.microservicio.hxbootcamp.application.common.MensajeError;
 import com.microservicio.hxbootcamp.application.dto.request.BootcampRequestDto;
 import com.microservicio.hxbootcamp.application.dto.response.BootcampResponseDto;
 import com.microservicio.hxbootcamp.application.mapper.IBootcampModelMapper;
 import com.microservicio.hxbootcamp.application.service.impl.BootcampService;
 import com.microservicio.hxbootcamp.domail.model.BootcampModel;
-import com.microservicio.hxbootcamp.domail.usecase.IBootcampUseCasePort;
 import com.microservicio.hxbootcamp.domail.usecase.impl.BootcampUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,12 +14,10 @@ import org.mockito.MockitoAnnotations;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.List;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class BootcampServiceTest {
+class BootcampServiceTest {
     @InjectMocks
     private BootcampService bootcampService;
     @Mock
@@ -34,7 +30,7 @@ public class BootcampServiceTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this); // Inicializa los mocks
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

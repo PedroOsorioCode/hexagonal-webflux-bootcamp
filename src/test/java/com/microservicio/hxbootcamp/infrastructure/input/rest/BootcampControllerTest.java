@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @WebFluxTest(controllers = BootcampController.class)
-public class BootcampControllerTest {
+class BootcampControllerTest {
     @Autowired
     private WebTestClient webTestClient;
     @MockBean
